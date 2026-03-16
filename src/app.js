@@ -305,9 +305,10 @@ function renderMoviesList() {
     </li>
   `).join('');
 
-  refs.addMovieSelect.innerHTML = state.movies.map((movie) =>
-    `<option value="${movie.id}">${movie.title}</option>`
-  ).join('');
+  refs.addMovieSelect.innerHTML = state.movies.map((movie) => {
+    const alreadyWatched = state.interactions.some((i) => String(i.movie_id) === String(movie.id));
+    return `<option value="${movie.id}" ${alreadyWatched ? 'disabled' : ''}>${movie.title}${alreadyWatched ? ' (ja assistido)' : ''}</option>`;
+  }).join('');
 }
 
 function renderInteractionsList() {
@@ -333,6 +334,7 @@ function renderInteractionsList() {
         await removeMovieFromUser(userId, movieId);
         await fetchUserInteractions(userId);
         renderInteractionsList();
+        renderMoviesList();
         setFeedback('Interacao removida com sucesso.');
       } catch (err) {
         setFeedback(err.message, true);
@@ -586,6 +588,7 @@ refs.addMovieBtn.addEventListener('click', async () => {
     await addMovieToUser(userId, movieId, eventType);
     await fetchUserInteractions(userId);
     renderInteractionsList();
+    renderMoviesList();
     setFeedback('Filme adicionado com sucesso.');
   } catch (err) {
     setFeedback(err.message, true);
