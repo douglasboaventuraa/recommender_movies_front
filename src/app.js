@@ -320,7 +320,7 @@ function renderInteractionsList() {
   refs.interactionsList.innerHTML = state.interactions.map((item) => `
     <li class="interaction-item" data-movie-id="${item.movie_id}" style="cursor:pointer;">
       <div class="item-main"><strong>${item.movie_title}</strong> <span class="remove-hint" style="font-size:0.75rem;color:#ff5f68;margin-left:8px;">&#x2715; remover</span></div>
-      <div class="item-sub">${(state.movieDetailsById[String(item.movie_id)]?.genres) || 'Sem genero'} | Popularidade: ${fmtNumber(state.movieDetailsById[String(item.movie_id)]?.popularity_score, 2)} | Peso: ${fmtNumber(item.event_weight, 2)} | ${fmtDate(item.occurred_at)}</div>
+      <div class="item-sub">${item.movie_genres || 'Sem genero'} | Popularidade: ${fmtNumber(item.popularity_score, 2)} | Peso: ${fmtNumber(item.event_weight, 2)} | ${fmtDate(item.occurred_at)}</div>
     </li>
   `).join('');
 
