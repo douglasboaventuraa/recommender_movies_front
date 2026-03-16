@@ -255,8 +255,8 @@ function renderUsersSelect() {
   refs.userSelect.innerHTML = state.users.map((user) => {
     const selected = String(user.id) === String(currentValue) ? 'selected' : '';
     const age = calcAgeFromBirthDate(user.birth_date);
-    const agePrefix = Number.isInteger(age) ? `${age} - ` : '';
-    return `<option value="${user.id}" ${selected}>${agePrefix}${user.full_name} (${user.external_id})</option>`;
+    const ageSuffix = Number.isInteger(age) ? ` (idade: ${age})` : '';
+    return `<option value="${user.id}" ${selected}>${user.full_name}${ageSuffix}</option>`;
   }).join('');
   state.selectedUser = refs.userSelect.value;
 }
