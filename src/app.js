@@ -432,7 +432,7 @@ async function loadSuggestionsFlow() {
   }
 
   state.selectedUser = userId;
-  setFeedback('Buscando sugestoes reais...');
+  setFeedback('Consultando sugestoes para o usuario selecionado...');
   await Promise.all([fetchUserInteractions(userId), fetchSuggestions(userId, limit)]);
   renderInteractionsList();
   renderSuggestionsList();
@@ -448,12 +448,12 @@ async function refreshSuggestionsFlow() {
   }
 
   state.selectedUser = userId;
-  setFeedback('Gerando snapshot de recomendacoes...');
+  setFeedback('Atualizando snapshot de recomendacoes...');
   await refreshSuggestionBatch(userId, limit);
   await Promise.all([fetchUserInteractions(userId), fetchSuggestions(userId, limit)]);
   renderInteractionsList();
   renderSuggestionsList();
-  setFeedback('Snapshot gerado e sugestoes atualizadas.');
+  setFeedback('Snapshot atualizado e sugestoes recarregadas.');
 }
 
 refs.userSelect.addEventListener('change', async () => {
@@ -462,10 +462,10 @@ refs.userSelect.addEventListener('change', async () => {
 
   try {
     state.selectedUser = userId;
-    setFeedback('Carregando interacoes do usuario...');
+    setFeedback('Carregando interacoes do usuario selecionado...');
     await fetchUserInteractions(userId);
     renderInteractionsList();
-    setFeedback('Usuario alterado.');
+    setFeedback('Usuario atualizado para consulta.');
   } catch (error) {
     setFeedback(error.message, true);
   }
@@ -510,7 +510,7 @@ refs.trainForm.addEventListener('submit', async (event) => {
   try {
     const result = await runTraining(payload);
     const runId = result?.run?.id;
-    setFeedback(`Treino concluido com sucesso. Run ${runId}.`);
+    setFeedback(`Treinamento concluido com sucesso. Run ${runId}.`);
     await refreshDashboard();
   } catch (error) {
     setFeedback(error.message, true);

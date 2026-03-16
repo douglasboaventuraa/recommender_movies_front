@@ -34,15 +34,15 @@
       </div>
 
       <div class="workspace-controls">
-        <label>Usuario
+        <label>Usuario para recomendacao
           <select id="userSelect"></select>
         </label>
-        <label>Limite de Sugestoes
+        <label>Quantidade de sugestoes (top N)
           <input id="recommendationLimit" type="number" min="3" max="30" value="10">
         </label>
         <div class="workspace-actions">
-          <button id="loadSuggestionsBtn" class="btn primary" type="button">Ver Sugestoes</button>
-          <button id="refreshSuggestionsBtn" class="btn ghost" type="button">Gerar Snapshot</button>
+          <button id="loadSuggestionsBtn" class="btn primary" type="button">Consultar Sugestoes</button>
+          <button id="refreshSuggestionsBtn" class="btn ghost" type="button">Atualizar Snapshot</button>
         </div>
       </div>
 
@@ -68,20 +68,21 @@
     <section class="grid-two">
       <article class="card">
         <h2>Executar Treinamento</h2>
+        <p class="sub">Dica: para um teste inicial estavel, use 20 epocas, batch 64, learning rate 0.005 e validation split 0.2.</p>
         <form id="trainForm" class="form-grid">
-          <label>Model Name
+          <label>Nome do modelo (versao)
             <input id="modelName" type="text" value="nn-genre-affinity" required>
           </label>
-          <label>Epochs (5-200)
+          <label>Epocas de treino (5-200)
             <input id="epochs" type="number" min="5" max="200" value="20" required>
           </label>
-          <label>Batch Size (16-256)
+          <label>Tamanho do batch (16-256)
             <input id="batchSize" type="number" min="16" max="256" value="64" required>
           </label>
-          <label>Learning Rate
+          <label>Taxa de aprendizado
             <input id="learningRate" type="number" min="0.0001" max="0.1" step="0.0001" value="0.005" required>
           </label>
-          <label>Validation Split
+          <label>Fracao para validacao (0.1-0.4)
             <input id="validationSplit" type="number" min="0.1" max="0.4" step="0.05" value="0.2" required>
           </label>
           <div class="form-action">
@@ -94,12 +95,12 @@
       <article class="card">
         <h2>Snapshot da Ultima Execucao</h2>
         <div class="kpis">
-          <div><span>Run ID</span><strong id="kpiRunId">-</strong></div>
+          <div><span>ID da run</span><strong id="kpiRunId">-</strong></div>
           <div><span>Modelo Ativo</span><strong id="kpiModel">-</strong></div>
-          <div><span>Val Accuracy</span><strong id="kpiValAcc">-</strong></div>
-          <div><span>Val Loss</span><strong id="kpiValLoss">-</strong></div>
-          <div><span>Samples</span><strong id="kpiSamples">-</strong></div>
-          <div><span>Classe Positiva</span><strong id="kpiPositive">-</strong></div>
+          <div><span>Acuracia de validacao</span><strong id="kpiValAcc">-</strong></div>
+          <div><span>Loss de validacao</span><strong id="kpiValLoss">-</strong></div>
+          <div><span>Amostras usadas</span><strong id="kpiSamples">-</strong></div>
+          <div><span>Taxa de classe positiva</span><strong id="kpiPositive">-</strong></div>
         </div>
       </article>
     </section>
@@ -121,14 +122,14 @@
         <table>
           <thead>
             <tr>
-              <th>Run</th>
+              <th>ID da run</th>
               <th>Modelo</th>
               <th>Status</th>
               <th>Accuracy</th>
-              <th>Val Accuracy</th>
-              <th>Val Loss</th>
-              <th>Samples</th>
-              <th>Fim</th>
+              <th>Acuracia de validacao</th>
+              <th>Loss de validacao</th>
+              <th>Amostras</th>
+              <th>Concluido em</th>
             </tr>
           </thead>
           <tbody id="runsBody"></tbody>
