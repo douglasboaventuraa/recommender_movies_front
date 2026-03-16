@@ -1,0 +1,12 @@
+{
+  "name": "recommender-movies-front",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "browser-sync -w . --server --port 5173"
+  },
+  "devDependencies": {
+    "browser-sync": "^3.0.4"
+  }
+}

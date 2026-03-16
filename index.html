@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recommender Movies - Training Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="bg-shape shape-a"></div>
+  <div class="bg-shape shape-b"></div>
+
+  <main class="layout">
+    <header class="hero card">
+      <div>
+        <p class="eyebrow">Recommender Movies</p>
+        <h1>Studio de Recomendacao e Treinamento</h1>
+        <p class="sub">Recomendacoes reais no topo e trilha completa de treinamento logo abaixo, com prova visual de desempenho.</p>
+      </div>
+      <div class="hero-actions">
+        <span id="apiStatus" class="pill neutral">API: checando...</span>
+      </div>
+    </header>
+
+    <section class="card workspace">
+      <div class="workspace-head">
+        <div>
+          <h2>Janela Real de Recomendacao</h2>
+          <p class="sub">Selecione um usuario real, veja interacoes e consulte sugestoes geradas com base no modelo treinado.</p>
+        </div>
+      </div>
+
+      <div class="workspace-controls">
+        <label>Usuario
+          <select id="userSelect"></select>
+        </label>
+        <label>Limite de Sugestoes
+          <input id="recommendationLimit" type="number" min="3" max="30" value="10">
+        </label>
+        <div class="workspace-actions">
+          <button id="loadSuggestionsBtn" class="btn primary" type="button">Ver Sugestoes</button>
+          <button id="refreshSuggestionsBtn" class="btn ghost" type="button">Gerar Snapshot</button>
+        </div>
+      </div>
+
+      <div class="grid-three">
+        <article class="panel">
+          <h3>Catalogo de Filmes</h3>
+          <ul id="moviesList" class="stack-list"></ul>
+        </article>
+
+        <article class="panel">
+          <h3>Interacoes do Usuario</h3>
+          <ul id="interactionsList" class="stack-list"></ul>
+        </article>
+
+        <article class="panel">
+          <h3>Sugestoes Baseadas no Treino</h3>
+          <p id="suggestionMeta" class="mini-meta">Sem consulta ainda.</p>
+          <ul id="suggestionsList" class="stack-list"></ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="grid-two">
+      <article class="card">
+        <h2>Executar Treinamento</h2>
+        <form id="trainForm" class="form-grid">
+          <label>Model Name
+            <input id="modelName" type="text" value="nn-genre-affinity" required>
+          </label>
+          <label>Epochs (5-200)
+            <input id="epochs" type="number" min="5" max="200" value="20" required>
+          </label>
+          <label>Batch Size (16-256)
+            <input id="batchSize" type="number" min="16" max="256" value="64" required>
+          </label>
+          <label>Learning Rate
+            <input id="learningRate" type="number" min="0.0001" max="0.1" step="0.0001" value="0.005" required>
+          </label>
+          <label>Validation Split
+            <input id="validationSplit" type="number" min="0.1" max="0.4" step="0.05" value="0.2" required>
+          </label>
+          <div class="form-action">
+            <button id="trainBtn" type="submit" class="btn primary">Treinar Agora</button>
+          </div>
+        </form>
+        <p id="feedback" class="feedback">Aguardando acao.</p>
+      </article>
+
+      <article class="card">
+        <h2>Snapshot da Ultima Execucao</h2>
+        <div class="kpis">
+          <div><span>Run ID</span><strong id="kpiRunId">-</strong></div>
+          <div><span>Modelo Ativo</span><strong id="kpiModel">-</strong></div>
+          <div><span>Val Accuracy</span><strong id="kpiValAcc">-</strong></div>
+          <div><span>Val Loss</span><strong id="kpiValLoss">-</strong></div>
+          <div><span>Samples</span><strong id="kpiSamples">-</strong></div>
+          <div><span>Classe Positiva</span><strong id="kpiPositive">-</strong></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid-two charts">
+      <article class="card">
+        <h2>Curva de Treinamento</h2>
+        <canvas id="epochChart" height="230"></canvas>
+      </article>
+      <article class="card">
+        <h2>Val Accuracy por Run</h2>
+        <canvas id="runsChart" height="230"></canvas>
+      </article>
+    </section>
+
+    <section class="card">
+      <h2>Ultimos Runs</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Run</th>
+              <th>Modelo</th>
+              <th>Status</th>
+              <th>Accuracy</th>
+              <th>Val Accuracy</th>
+              <th>Val Loss</th>
+              <th>Samples</th>
+              <th>Fim</th>
+            </tr>
+          </thead>
+          <tbody id="runsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>
