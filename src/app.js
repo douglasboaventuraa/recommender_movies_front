@@ -2,7 +2,10 @@ const resolveApiBase = () => {
   const queryApi = new URLSearchParams(window.location.search).get('api');
   const globalApi = window.__API_BASE__;
   const storedApi = window.localStorage.getItem('RECOMMENDER_API_BASE');
-  const fallback = 'http://localhost:8080';
+  const isLocalHost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+  const fallback = isLocalHost
+    ? 'http://localhost:8080'
+    : 'https://recommender-movies-back.onrender.com';
 
   const raw = queryApi || globalApi || storedApi || fallback;
   const normalized = String(raw).trim().replace(/\/$/, '');
