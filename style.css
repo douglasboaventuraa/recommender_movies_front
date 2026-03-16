@@ -315,6 +315,48 @@ thead th {
   align-items: end;
 }
 
+.workspace-movie-manager {
+  margin-top: 12px;
+}
+
+.movie-manager-toggle {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: #121212;
+  cursor: pointer;
+}
+
+.movie-manager-toggle summary {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--muted);
+  list-style: none;
+  cursor: pointer;
+}
+
+.movie-manager-toggle summary::after {
+  content: ' ▾';
+  color: var(--accent);
+}
+
+.movie-manager-toggle[open] summary::after {
+  content: ' ▴';
+}
+
+.movie-manager-form {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.movie-manager-form label {
+  flex: 1;
+  min-width: 160px;
+}
+
 .grid-three {
   display: grid;
   grid-template-columns: 1fr;

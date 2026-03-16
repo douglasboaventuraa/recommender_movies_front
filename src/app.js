@@ -55,7 +55,10 @@ const refs = {
   moviesList: document.getElementById('moviesList'),
   interactionsList: document.getElementById('interactionsList'),
   suggestionsList: document.getElementById('suggestionsList'),
-  suggestionMeta: document.getElementById('suggestionMeta')
+  suggestionMeta: document.getElementById('suggestionMeta'),
+  addMovieSelect: document.getElementById('addMovieSelect'),
+  addMovieEvent: document.getElementById('addMovieEvent'),
+  addMovieBtn: document.getElementById('addMovieBtn')
 };
 
 function setFeedback(message, isError = false) {
@@ -184,6 +187,30 @@ async function refreshSuggestionBatch(userId, limit) {
   return res.json();
 }
 
+async function addMovieToUser(userId, movieId, eventType) {
+  const res = await fetch(`${API_BASE}/api/users/${encodeURIComponent(userId)}/movies`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ movieId, eventType })
+  });
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(error.details || error.error || 'Falha ao adicionar filme');
+  }
+  return res.json();
+}
+
+async function removeMovieFromUser(userId, movieId) {
+  const res = await fetch(`${API_BASE}/api/users/${encodeURIComponent(userId)}/movies/${encodeURIComponent(movieId)}`, {
+    method: 'DELETE'
+  });
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(error.details || error.error || 'Falha ao remover filme');
+  }
+  return res.json();
+}
+
 async function runTraining(payload) {
   const res = await fetch(`${API_BASE}/api/train`, {
     method: 'POST',
@@ -264,6 +291,7 @@ function renderUsersSelect() {
 function renderMoviesList() {
   if (!state.movies.length) {
     refs.moviesList.innerHTML = '<li>Sem filmes disponiveis.</li>';
+    refs.addMovieSelect.innerHTML = '<option value="">Sem filmes</option>';
     return;
   }
 
@@ -276,6 +304,10 @@ function renderMoviesList() {
       </div>
     </li>
   `).join('');
+
+  refs.addMovieSelect.innerHTML = state.movies.map((movie) =>
+    `<option value="${movie.id}">${movie.title}</option>`
+  ).join('');
 }
 
 function renderInteractionsList() {
@@ -285,11 +317,28 @@ function renderInteractionsList() {
   }
 
   refs.interactionsList.innerHTML = state.interactions.map((item) => `
-    <li>
-      <div class="item-main"><strong>${item.movie_title}</strong></div>
+    <li class="interaction-item" data-movie-id="${item.movie_id}" style="cursor:pointer;">
+      <div class="item-main"><strong>${item.movie_title}</strong> <span class="remove-hint" style="font-size:0.75rem;color:#ff5f68;margin-left:8px;">&#x2715; remover</span></div>
       <div class="item-sub">${(state.movieDetailsById[String(item.movie_id)]?.genres) || 'Sem genero'} | Popularidade: ${fmtNumber(state.movieDetailsById[String(item.movie_id)]?.popularity_score, 2)} | Peso: ${fmtNumber(item.event_weight, 2)} | ${fmtDate(item.occurred_at)}</div>
     </li>
   `).join('');
+
+  refs.interactionsList.querySelectorAll('.interaction-item').forEach((li) => {
+    li.addEventListener('click', async () => {
+      const movieId = li.dataset.movieId;
+      const userId = state.selectedUser;
+      if (!userId || !movieId) return;
+      try {
+        setFeedback('Removendo interacao...');
+        await removeMovieFromUser(userId, movieId);
+        await fetchUserInteractions(userId);
+        renderInteractionsList();
+        setFeedback('Interacao removida com sucesso.');
+      } catch (err) {
+        setFeedback(err.message, true);
+      }
+    });
+  });
 }
 
 function renderSuggestionsList() {
@@ -516,6 +565,32 @@ refs.trainForm.addEventListener('submit', async (event) => {
     setFeedback(error.message, true);
   } finally {
     refs.trainBtn.disabled = false;
+  }
+});
+
+refs.addMovieBtn.addEventListener('click', async () => {
+  const userId = state.selectedUser;
+  const movieId = refs.addMovieSelect.value;
+  const eventType = refs.addMovieEvent.value;
+  if (!userId) {
+    setFeedback('Selecione um usuario antes de adicionar um filme.', true);
+    return;
+  }
+  if (!movieId) {
+    setFeedback('Selecione um filme para adicionar.', true);
+    return;
+  }
+  try {
+    refs.addMovieBtn.disabled = true;
+    setFeedback('Adicionando filme ao usuario...');
+    await addMovieToUser(userId, movieId, eventType);
+    await fetchUserInteractions(userId);
+    renderInteractionsList();
+    setFeedback('Filme adicionado com sucesso.');
+  } catch (err) {
+    setFeedback(err.message, true);
+  } finally {
+    refs.addMovieBtn.disabled = false;
   }
 });
 

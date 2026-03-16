@@ -46,6 +46,24 @@
         </div>
       </div>
 
+      <div class="workspace-movie-manager">
+        <details class="movie-manager-toggle">
+          <summary>Gerenciar filmes do usuario</summary>
+          <div class="movie-manager-form">
+            <label>Adicionar filme assistido
+              <select id="addMovieSelect"></select>
+            </label>
+            <label>Tipo de evento
+              <select id="addMovieEvent">
+                <option value="watch_complete">Assistiu completo</option>
+                <option value="watch_start">Assistiu parcialmente</option>
+              </select>
+            </label>
+            <button id="addMovieBtn" class="btn primary" type="button">Adicionar</button>
+          </div>
+        </details>
+      </div>
+
       <div class="grid-three">
         <article class="panel">
           <h3>Catalogo de Filmes</h3>
@@ -54,6 +72,7 @@
 
         <article class="panel">
           <h3>Interacoes do Usuario</h3>
+          <p class="mini-meta">Clique em um filme para remover a interacao.</p>
           <ul id="interactionsList" class="stack-list"></ul>
         </article>
 
