@@ -307,7 +307,8 @@ function renderMoviesList() {
 
   refs.addMovieSelect.innerHTML = state.movies.map((movie) => {
     const alreadyWatched = state.interactions.some((i) => String(i.movie_id) === String(movie.id));
-    return `<option value="${movie.id}" ${alreadyWatched ? 'disabled' : ''}>${movie.title}${alreadyWatched ? ' (ja assistido)' : ''}</option>`;
+    const genreLabel = movie.genres ? ` – ${movie.genres}` : ' – Sem genero';
+    return `<option value="${movie.id}" ${alreadyWatched ? 'disabled' : ''}>${movie.title}${genreLabel}${alreadyWatched ? ' (ja assistido)' : ''}</option>`;
   }).join('');
 }
 
